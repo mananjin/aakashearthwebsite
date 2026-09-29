@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AAKASH EARTH FESTIVAL'S AND UPDATES</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#0a0a0c',
+                        charcoal: '#121318',
+                        gold: {
+                            light: '#f3e5ab',
+                            DEFAULT: '#d4af37',
+                            dark: '#aa7c11'
+                        },
+                        emerald: {
+                            glass: 'rgba(4, 30, 22, 0.85)',
+                            border: 'rgba(16, 185, 129, 0.3)'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Cormorant Garamond', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0a0c;
+            color: #e5e7eb;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fff3c4 0%, #d4af37 50%, #aa7c11 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glass-card {
+            background: rgba(18, 19, 24, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .glass-modal {
+            background: rgba(10, 10, 12, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        @media print {
+            body * { visibility: hidden; }
+            #printable-receipt, #printable-receipt * { visibility: visible; }
+            #printable-receipt {
+                position: absolute; left: 0; top: 0; width: 100%;
+                background: white !important; color: black !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- NAVIGATION BAR -->
+    <nav class="sticky top-0 z-40 glass-card border-b border-gold/20 px-4 md:px-8 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full border border-gold/50 flex items-center justify-center bg-gold/10">
+                <span class="font-serif text-gold text-xl font-bold">A</span>
+            </div>
+            <div>
+                <h1 class="font-serif font-bold text-lg md:text-xl gold-gradient-text tracking-wider">AAKASH EARTH</h1>
+                <p class="text-[10px] tracking-widest text-gray-400 uppercase">Festival's & Updates</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-3 md:space-x-4">
+            <button onclick="openVolunteerModal()" class="px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-medium rounded-md border border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10 transition">
+                <i class="fa-solid fa-hand-holding-heart mr-1.5"></i> Join Volunteer
+            </button>
+            <div id="user-nav-area">
+                <button onclick="openAuthModal()" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-md bg-gradient-to-r from-gold/80 to-gold-dark text-black hover:opacity-90 transition">
+                    <i class="fa-solid fa-lock mr-1"></i> Login Portal
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="container mx-auto px-4 py-8 flex-grow space-y-12">
+        <section class="text-center space-y-4 py-8 border-b border-gold/10">
+            <span class="text-xs uppercase tracking-[0.3em] text-gold/80 bg-gold/5 px-4 py-1.5 rounded-full border border-gold/20">
+                Official Festival Portal
+            </span>
+            <h2 class="font-serif text-4xl md:text-6xl font-bold gold-gradient-text">
+                AAKASH EARTH FESTIVAL'S AND UPDATES
+            </h2>
+            <p class="text-gray-400 max-w-2xl mx-auto text-sm md:text-base font-light">
+                Discover festival schedules, access VIP receipts, manage dynamic categories, and join our official volunteer team.
+            </p>
+        </section>
+
+        <!-- CATEGORIES & DASHBOARD CONTROLS -->
+        <section class="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex flex-wrap items-center gap-2" id="category-pills"></div>
+
+            <div class="flex items-center space-x-3 w-full md:w-auto justify-end">
+                <button id="add-category-btn" onclick="openCategoryModal()" class="hidden px-3 py-2 text-xs font-semibold rounded bg-charcoal border border-gold/30 text-gold hover:bg-gold/10 transition">
+                    <i class="fa-solid fa-folder-plus mr-1"></i> + Category
+                </button>
+                <button id="add-event-btn" onclick="openEventModal()" class="hidden px-4 py-2 text-xs md:text-sm font-semibold rounded bg-gold text-black hover:bg-gold-light transition">
+                    <i class="fa-solid fa-plus mr-1"></i> Add Festival
+                </button>
+                <button id="admin-panel-btn" onclick="openAdminModal()" class="hidden px-4 py-2 text-xs md:text-sm font-semibold rounded bg-red-900/80 border border-red-500/50 text-white hover:bg-red-800 transition">
+                    <i class="fa-solid fa-user-shield mr-1"></i> Admin Dashboard
+                </button>
+            </div>
+        </section>
+
+        <!-- FESTIVALS GRID -->
+        <section class="space-y-6">
+            <h3 class="font-serif text-2xl font-bold text-gold border-l-2 border-gold pl-3">Upcoming Festivals & Schedules</h3>
+            <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="glass-card border-t border-gold/20 py-6 mt-12 text-center text-xs text-gray-500">
+        <p>© 2026 AAKASH EARTH FESTIVAL'S AND UPDATES. All rights reserved.</p>
+    </footer>
+
+    <!-- MODAL 1: AUTHENTICATION -->
+    <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 hidden p-4">
+        <div class="glass-modal w-full max-w-md rounded-xl p-6 space-y-6 relative border border-gold/30">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center space-y-1">
+                <h3 class="font-serif text-2xl font-bold gold-gradient-text">Authentication Portal</h3>
+            </div>
+            <div class="grid grid-cols-2 gap-2 bg-charcoal p-1 rounded-lg border border-gold/10">
+                <button id="tab-member-btn" onclick="switchAuthTab('member')" class="py-2 text-xs font-semibold rounded-md bg-gold text-black transition">Member Login</button>
+                <button id="tab-admin-btn" onclick="switchAuthTab('admin')" class="py-2 text-xs font-semibold rounded-md text-gray-400 hover:text-white transition">Admin Login</button>
+            </div>
+            <form id="auth-form" onsubmit="handleLogin(event)" class="space-y-4">
+                <input type="hidden" id="login-role" value="member">
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Username</label>
+                    <input type="text" id="login-username" required class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-gold">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Password</label>
+                    <input type="password" id="login-password" required class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-gold">
+                </div>
+                <button type="submit" class="w-full py-2.5 text-sm font-semibold rounded bg-gradient-to-r from-gold to-gold-dark text-black hover:opacity-90 transition">
+                    Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: VOLUNTEER REGISTRATION FORM -->
+    <div id="volunteer-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 hidden p-4 overflow-y-auto">
+        <div class="glass-modal w-full max-w-lg rounded-xl p-6 space-y-4 my-8 relative border border-emerald-500/30">
+            <button onclick="closeVolunteerModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center space-y-1">
+                <h3 class="font-serif text-2xl font-bold text-emerald-400">Volunteer Application</h3>
+                <p class="text-xs text-gray-400">Join our festival volunteer team</p>
+            </div>
+            <form onsubmit="submitVolunteerForm(event)" class="space-y-3 text-xs">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-medium text-gray-300 mb-1">Full Name *</label>
+                        <input type="text" id="vol-name" required class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-white">
+                    </div>
+                    <div>
+                        <label class="block font-medium text-gray-300 mb-1">Age *</label>
+                        <input type="number" id="vol-age" min="16" max="80" required class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-white">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-medium text-gray-300 mb-1">Phone Number *</label>
+                        <input type="tel" id="vol-phone" required class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-white">
+                    </div>
+                    <div>
+                        <label class="block font-medium text-gray-300 mb-1">Email</label>
+                        <input type="email" id="vol-email" class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-300 mb-1">Profile Photo URL *</label>
+                    <input type="url" id="vol-photo" placeholder="https://example.com/photo.jpg" required class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-white">
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-300 mb-1">Residential Address *</label>
+                    <textarea id="vol-address" rows="2" required class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-white"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-medium text-gray-300 mb-1">Select Festival *</label>
+                        <select id="vol-event-select" required class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-white">
+                            <!-- Populated Dynamically -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-gray-300 mb-1">Emergency Contact *</label>
+                        <input type="tel" id="vol-emergency" required class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-300 mb-1">Skills / Special Role</label>
+                    <input type="text" id="vol-skills" placeholder="e.g. Stage Management, Security" class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-white">
+                </div>
+                <button type="submit" class="w-full py-2.5 font-bold rounded bg-emerald-500 text-black hover:bg-emerald-400 transition">
+                    Submit Registration
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: ADMIN DASHBOARD -->
+    <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 hidden p-4 overflow-y-auto">
+        <div class="glass-modal w-full max-w-4xl rounded-xl p-6 space-y-6 my-8 relative border border-red-500/30">
+            <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="flex items-center justify-between border-b border-gold/20 pb-4">
+                <h3 class="font-serif text-2xl font-bold text-red-400">Admin Control Center</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-charcoal p-4 rounded-lg border border-gold/10 space-y-3">
+                    <h4 class="font-serif font-bold text-gold text-lg">Add New Member</h4>
+                    <form onsubmit="adminAddMember(event)" class="space-y-2 text-xs">
+                        <input type="text" id="new-mem-username" placeholder="Username" required class="w-full bg-obsidian border border-gold/20 rounded px-2.5 py-1.5 text-white">
+                        <input type="text" id="new-mem-name" placeholder="Full Name" required class="w-full bg-obsidian border border-gold/20 rounded px-2.5 py-1.5 text-white">
+                        <input type="password" id="new-mem-password" placeholder="Password" required class="w-full bg-obsidian border border-gold/20 rounded px-2.5 py-1.5 text-white">
+                        <button type="submit" class="w-full py-2 bg-gold text-black font-semibold rounded hover:bg-gold-light">Create Member</button>
+                    </form>
+                </div>
+                <div class="md:col-span-2 bg-charcoal p-4 rounded-lg border border-gold/10 space-y-3">
+                    <h4 class="font-serif font-bold text-emerald-400 text-lg">Volunteer Applications</h4>
+                    <div id="admin-volunteer-list" class="space-y-3 max-h-80 overflow-y-auto pr-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: ADD FESTIVAL EVENT -->
+    <div id="event-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 hidden p-4 overflow-y-auto">
+        <div class="glass-modal w-full max-w-lg rounded-xl p-6 space-y-4 relative border border-gold/30">
+            <button onclick="closeEventModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="font-serif text-2xl font-bold gold-gradient-text">Add Festival Event</h3>
+            <form onsubmit="saveEvent(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="event-id">
+                <div>
+                    <label class="block font-medium text-gray-300 mb-1">Festival Title *</label>
+                    <input type="text" id="event-title" required class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-medium text-gray-300 mb-1">Date *</label>
+                        <input type="date" id="event-date" required class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-white">
+                    </div>
+                    <div>
+                        <label class="block font-medium text-gray-300 mb-1">Category *</label>
+                        <select id="event-category-select" required class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-white"></select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-300 mb-1">Banner Image URL *</label>
+                    <input type="url" id="event-image" required class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-white">
+                </div>
+                <div>
+                    
+                    <textarea id="event-schedule" rows="3" placeholder="10:00 AM - Opening Ceremony" class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-white"></textarea>
+                </div>
+                <button type="submit" class="w-full py-2.5 font-bold rounded bg-gold text-black hover:bg-gold-light transition">Save Event</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 5: ADD CATEGORY -->
+    <div id="category-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 hidden p-4">
+        <div class="glass-modal w-full max-w-sm rounded-xl p-6 space-y-4 relative border border-gold/30">
+            <button onclick="closeCategoryModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="font-serif text-xl font-bold text-gold">Manage Categories</h3>
+            <form onsubmit="handleAddCategory(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-medium text-gray-300 mb-1">Category Name</label>
+                    <input type="text" id="new-category-input" required class="w-full bg-charcoal border border-gold/20 rounded px-3 py-2 text-white">
+                </div>
+                <button type="submit" class="w-full py-2 font-bold rounded bg-gold text-black hover:bg-gold-light">Add Category</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PRINTABLE RECEIPT CONTAINER -->
+    <div id="printable-receipt" class="hidden p-8 max-w-md mx-auto text-black bg-white border-2 border-yellow-600 space-y-4">
+        <div class="text-center border-b pb-4">
+            <h2 class="text-2xl font-bold uppercase tracking-widest">AAKASH EARTH</h2>
+            <p class="text-xs">VIP Festival Pass & Entry Receipt</p>
+        </div>
+        <div id="receipt-details" class="text-xs space-y-2"></div>
+        <div class="flex justify-center pt-4">
+            <div id="receipt-qrcode"></div>
+        </div>
+    </div>
+
+    <!-- APPLICATION LOGIC -->
+    <script>
+        let currentUser = null;
+        let currentCategoryFilter = 'All';
+
+        let categories = JSON.parse(localStorage.getItem('ae_categories')) || ['All', 'Religious', 'Cultural', 'Youth', 'Music'];
+        let events = JSON.parse(localStorage.getItem('ae_events')) || [
+            {
+                id: 'evt-1',
+                title: 'Grand Earth Spring Festival 2026',
+                date: '2026-03-15',
+                category: 'Cultural',
+                image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80',
+                schedule: '09:00 AM - Flag Hoisting\n01:00 PM - Feast\n06:00 PM - Music Concert',
+                createdBy: 'admin'
+            },
+            {
+                id: 'evt-2',
+                title: 'Aakash Earth Maha Utsav',
+                date: '2026-04-10',
+                category: 'Religious',
+                image: 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=format&fit=crop&w=800&q=80',
+                schedule: '08:00 AM - Morning Prayer\n07:00 PM - Maha Aarti',
+                createdBy: 'admin'
+            }
+        ];
+        let volunteers = JSON.parse(localStorage.getItem('ae_volunteers')) || [];
+        let members = JSON.parse(localStorage.getItem('ae_members')) || [
+            { username: 'member1', name: 'Member User', password: '123' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderEvents();
+            populateVolunteerSelect();
+            checkUserSession();
+        });
+
+        function populateVolunteerSelect() {
+            const select = document.getElementById('vol-event-select');
+            if (!select) return;
+            if (events.length === 0) {
+                select.innerHTML = '<option value="">No Festivals Available</option>';
+            } else {
+                select.innerHTML = events.map(e => `<option value="${e.id}">${e.title} (${e.date})</option>`).join('');
+            }
+        }
+
+        function checkUserSession() {
+            const saved = localStorage.getItem('ae_user');
+            if (saved) {
+                currentUser = JSON.parse(saved);
+                updateUIForUser();
+            }
+        }
+
+        function updateUIForUser() {
+            const navArea = document.getElementById('user-nav-area');
+            const addCatBtn = document.getElementById('add-category-btn');
+            const addEvtBtn = document.getElementById('add-event-btn');
+            const adminBtn = document.getElementById('admin-panel-btn');
+
+            if (currentUser) {
+                navArea.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="text-xs text-gold">User: <b>${currentUser.username}</b> (${currentUser.role})</span>
+                        <button onclick="handleLogout()" class="px-3 py-1.5 text-xs font-semibold rounded bg-red-900/40 text-red-300 border border-red-500/30 hover:bg-red-800">Logout</button>
+                    </div>
+                `;
+                addCatBtn.classList.remove('hidden');
+                addEvtBtn.classList.remove('hidden');
+                if (currentUser.role === 'admin') adminBtn.classList.remove('hidden');
+                else adminBtn.classList.add('hidden');
+            } else {
+                navArea.innerHTML = `
+                    <button onclick="openAuthModal()" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-md bg-gradient-to-r from-gold/80 to-gold-dark text-black hover:opacity-90">
+                        <i class="fa-solid fa-lock mr-1"></i> Login Portal
+                    </button>
+                `;
+                addCatBtn.classList.add('hidden');
+                addEvtBtn.classList.add('hidden');
+                adminBtn.classList.add('hidden');
+            }
+            renderEvents();
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('ae_user');
+            updateUIForUser();
+        }
+
+        function switchAuthTab(role) {
+            document.getElementById('login-role').value = role;
+            const memberBtn = document.getElementById('tab-member-btn');
+            const adminBtn = document.getElementById('tab-admin-btn');
+            if (role === 'member') {
+                memberBtn.className = 'py-2 text-xs font-semibold rounded-md bg-gold text-black transition';
+                adminBtn.className = 'py-2 text-xs font-semibold rounded-md text-gray-400 hover:text-white transition';
+            } else {
+                adminBtn.className = 'py-2 text-xs font-semibold rounded-md bg-gold text-black transition';
+                memberBtn.className = 'py-2 text-xs font-semibold rounded-md text-gray-400 hover:text-white transition';
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const role = document.getElementById('login-role').value;
+            const u = document.getElementById('login-username').value;
+            const p = document.getElementById('login-password').value;
+
+            if (role === 'admin') {
+                if (u === 'admin' && p === 'admin!@#') {
+                    currentUser = { username: 'admin', role: 'admin' };
+                } else {
+                    alert('Invalid Admin Credentials!'); return;
+                }
+            } else {
+                const mem = members.find(m => m.username === u && m.password === p);
+                if (mem) currentUser = { username: mem.username, role: 'member' };
+                else { alert('Invalid Member Credentials!'); return; }
+            }
+
+            localStorage.setItem('ae_user', JSON.stringify(currentUser));
+            updateUIForUser();
+            closeAuthModal();
+        }
+
+        function renderCategories() {
+            const pills = document.getElementById('category-pills');
+            pills.innerHTML = categories.map(cat => `
+                <button onclick="filterCategory('${cat}')" class="px-3 py-1.5 rounded-full text-xs font-medium transition ${currentCategoryFilter === cat ? 'bg-gold text-black font-bold' : 'bg-charcoal border border-gold/20 text-gray-300 hover:border-gold'}">
+                    ${cat}
+                </button>
+            `).join('');
+
+            const evtSelect = document.getElementById('event-category-select');
+            evtSelect.innerHTML = categories.filter(c => c !== 'All').map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        function filterCategory(cat) {
+            currentCategoryFilter = cat;
+            renderCategories();
+            renderEvents();
+        }
+
+        function handleAddCategory(e) {
+            e.preventDefault();
+            const val = document.getElementById('new-category-input').value.trim();
+            if (val && !categories.includes(val)) {
+                categories.push(val);
+                localStorage.setItem('ae_categories', JSON.stringify(categories));
+                renderCategories();
+                closeCategoryModal();
+            }
+        }
+
+        function renderEvents() {
+            const grid = document.getElementById('events-grid');
+            const filtered = currentCategoryFilter === 'All' ? events : events.filter(e => e.category === currentCategoryFilter);
+
+            grid.innerHTML = filtered.map(evt => {
+                const canEdit = currentUser && (currentUser.role === 'admin' || currentUser.username === evt.createdBy);
+                const approvedVolunteers = volunteers.filter(v => v.eventId === evt.id && v.status === 'Accepted');
+
+                return `
+                    <div class="glass-card rounded-xl overflow-hidden flex flex-col justify-between border border-gold/20 hover:border-gold/50 transition">
+                        <div>
+                            <img src="${evt.image}" class="w-full h-48 object-cover" alt="${evt.title}">
+                            <div class="p-5 space-y-3">
+                                <div class="flex items-center justify-between text-xs text-gold">
+                                    <span class="bg-gold/10 px-2.5 py-1 rounded border border-gold/30">${evt.category}</span>
+                                    <span><i class="fa-regular fa-calendar mr-1"></i>${evt.date}</span>
+                                </div>
+                                <h4 class="font-serif text-xl font-bold text-white">${evt.title}</h4>
+                                <div class="bg-charcoal/80 p-3 rounded text-xs space-y-1 border border-gold/10">
+                                    <p class="font-bold text-gold"><i class="fa-solid fa-list-check mr-1"></i> Is tarik ko kya hoga (Schedule):</p>
+                                    <p class="text-gray-300 whitespace-pre-line">${evt.schedule || 'Schedule coming soon.'}</p>
+                                </div>
+                                <div class="pt-2 border-t border-gold/10 space-y-2">
+                                    <p class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">Official Volunteers (${approvedVolunteers.length})</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        ${approvedVolunteers.map(v => `
+                                            <div class="flex items-center space-x-1.5 bg-emerald-950/60 border border-emerald-500/30 px-2 py-1 rounded-full text-[10px]">
+                                                <img src="${v.photo}" class="w-4 h-4 rounded-full object-cover">
+                                                <span class="text-emerald-200 font-medium">${v.name} (${v.age})</span>
+                                            </div>
+                                        `).join('') || '<span class="text-[10px] text-gray-500 italic">No approved volunteers yet.</span>'}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            ${canEdit ? `
+                                <button onclick="deleteEvent('${evt.id}')" class="px-3 py-2 text-xs bg-red-900/40 text-red-300 rounded border border-red-500/30 hover:bg-red-800">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('') || '<p class="text-sm text-gray-400">No festival events added yet.</p>';
+        }
+
+        function saveEvent(e) {
+            e.preventDefault();
+            const id = 'evt-' + Date.now();
+            const title = document.getElementById('event-title').value;
+            const date = document.getElementById('event-date').value;
+            const category = document.getElementById('event-category-select').value;
+            const image = document.getElementById('event-image').value;
+            const schedule = document.getElementById('event-schedule').value;
+
+            events.unshift({ id, title, date, category, image, schedule, createdBy: currentUser ? currentUser.username : 'admin' });
+            localStorage.setItem('ae_events', JSON.stringify(events));
+            renderEvents();
+            populateVolunteerSelect();
+            closeEventModal();
+        }
+
+        function deleteEvent(id) {
+            if (confirm('Delete this event?')) {
+                events = events.filter(e => e.id !== id);
+                localStorage.setItem('ae_events', JSON.stringify(events));
+                renderEvents();
+                populateVolunteerSelect();
+            }
+        }
+
+        function openVolunteerModal() {
+            populateVolunteerSelect();
+            document.getElementById('volunteer-modal').classList.remove('hidden');
+        }
+
+        function submitVolunteerForm(e) {
+            e.preventDefault();
+            const vol = {
+                id: 'vol-' + Date.now(),
+                name: document.getElementById('vol-name').value,
+                age: document.getElementById('vol-age').value,
+                phone: document.getElementById('vol-phone').value,
+                email: document.getElementById('vol-email').value,
+                photo: document.getElementById('vol-photo').value,
+                address: document.getElementById('vol-address').value,
+                eventId: document.getElementById('vol-event-select').value,
+                emergency: document.getElementById('vol-emergency').value,
+                skills: document.getElementById('vol-skills').value,
+                status: 'Pending'
+            };
+
+            volunteers.push(vol);
+            localStorage.setItem('ae_volunteers', JSON.stringify(volunteers));
+            alert('Volunteer registration submitted successfully!');
+            closeVolunteerModal();
+            renderEvents();
+        }
+
+        function openAdminModal() {
+            renderAdminVolunteers();
+            document.getElementById('admin-modal').classList.remove('hidden');
+        }
+
+        function renderAdminVolunteers() {
+            const list = document.getElementById('admin-volunteer-list');
+            list.innerHTML = volunteers.map(v => {
+                const evt = events.find(e => e.id === v.eventId);
+                return `
+                    <div class="bg-obsidian p-3 rounded border border-gold/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs">
+                        <div class="flex items-center space-x-3">
+                            <img src="${v.photo}" class="w-12 h-12 rounded-full object-cover border border-gold/40">
+                            <div>
+                                <h5 class="font-bold text-white">${v.name} <span class="text-gray-400">(${v.age} yrs)</span></h5>
+                                <p class="text-gray-400">Phone: ${v.phone} | Addr: ${v.address}</p>
+                                <p class="text-gold">Festival: ${evt ? evt.title : 'General'}</p>
+                                <p class="text-emerald-400 font-semibold">Status: ${v.status}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            ${v.status !== 'Accepted' ? `
+                                <button onclick="updateVolunteerStatus('${v.id}', 'Accepted')" class="px-2.5 py-1 bg-emerald-600 text-white rounded font-bold">Accept</button>
+                            ` : ''}
+                            <button onclick="deleteVolunteer('${v.id}')" class="px-2.5 py-1 bg-red-900/60 text-red-200 rounded">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('') || '<p class="text-xs text-gray-500">No applications received yet.</p>';
+        }
+
+        function updateVolunteerStatus(id, status) {
+            const vol = volunteers.find(v => v.id === id);
+            if (vol) {
+                vol.status = status;
+                localStorage.setItem('ae_volunteers', JSON.stringify(volunteers));
+                renderAdminVolunteers();
+                renderEvents();
+            }
+        }
+
+        function deleteVolunteer(id) {
+            volunteers = volunteers.filter(v => v.id !== id);
+            localStorage.setItem('ae_volunteers', JSON.stringify(volunteers));
+            renderAdminVolunteers();
+            renderEvents();
+        }
+
+        function adminAddMember(e) {
+            e.preventDefault();
+            const u = document.getElementById('new-mem-username').value;
+            const n = document.getElementById('new-mem-name').value;
+            const p = document.getElementById('new-mem-password').value;
+
+            members.push({ username: u, name: n, password: p });
+            localStorage.setItem('ae_members', JSON.stringify(members));
+            alert('New Member Added Successfully!');
+            document.getElementById('new-mem-username').value = '';
+            document.getElementById('new-mem-name').value = '';
+            document.getElementById('new-mem-password').value = '';
+        }
+
+        function generateReceipt(eventId) {
+            const evt = events.find(e => e.id === eventId);
+            if (!evt) return;
+
+            document.getElementById('receipt-details').innerHTML = `
+                <p><strong>Receipt ID:</strong> RCP-${Math.floor(100000 + Math.random() * 900000)}</p>
+                <p><strong>Festival:</strong> ${evt.title}</p>
+                <p><strong>Date:</strong> ${evt.date}</p>
+                <p><strong>Category:</strong> ${evt.category}</p>
+                <p><strong>Issued To:</strong> ${currentUser ? currentUser.username : 'Guest Visitor'}</p>
+            `;
+
+            const qrContainer = document.getElementById('receipt-qrcode');
+            qrContainer.innerHTML = '';
+            new QRCode(qrContainer, {
+                text: `AAKASH-EARTH-PASS-${evt.id}-${Date.now()}`,
+                width: 100, height: 100
+            });
+
+            window.print();
+        }
+
+        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+        function closeVolunteerModal() { document.getElementById('volunteer-modal').classList.add('hidden'); }
+        function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
+        function openEventModal() { document.getElementById('event-modal').classList.remove('hidden'); }
+        function closeEventModal() { document.getElementById('event-modal').classList.add('hidden'); }
+        function openCategoryModal() { document.getElementById('category-modal').classList.remove('hidden'); }
+        function closeCategoryModal() { document.getElementById('category-modal').classList.add('hidden'); }
+    </script>
+</body>
+</html>
